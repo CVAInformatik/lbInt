@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 	baseType x1;
   do {
     std::cout << "9.0 z    "<< "  "<< iToA( z) << std::endl;
-  	 x1 = z.dropLSD();
+  	 x1 = z.divRadix();
     std::cout << "9.1 LSD  "<< "  "<< x1 << std::endl;
   } while ( x1 >= 0 ) ;
   

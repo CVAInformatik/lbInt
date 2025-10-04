@@ -147,19 +147,23 @@ public:
 
 	  
 	  //
-	  // integer division by radix, removing a digit from the number by removing the LSD.
-	  // returns the numerical value of the digit dropped or -1 if number is 0
+	  // integer division by a power of the radix, 
+	  // returns the numerical value of the new LSD  or -1 if number is 0
 	  //
-	  baseType  dropLSD(){
+	  baseType  divRadix(unsigned int power = 1 ){
+	  	unsigned int p = power ;
 	  	baseType res = 0;
+	  	if(longInt.size() > p ) {
+	  		for( int i = p ; i < longInt.size() ; i++) longInt[i-p] = longInt[i];
+	  	  for( int i = 0 ;  i < p ; i++ ) if (longInt.size() ) longInt.pop_back();	  	
+  	  }   	
+  	  else longInt.clear();
+  	  	
 	  	switch (_sign(longInt)){
 	  		case -1: res = -longInt[0]; 	break;
-	  		case 0 : res =  -1 ;        	break;
-	  		default : res=  longInt[0]; 	break;	  			
-	  	}
-	  	if(longInt.size() > 1 ) 
-	  		for( int i = 1; i < longInt.size() ; i++)  longInt[i-1] = longInt[i];
-  	  if (longInt.size() ) longInt.pop_back();
+  			case 0 : res =  -1 ;  				break;
+  			default: res= longInt[0] ; 		break;	  			
+  		}
 	  	return res;
 	  }
 
