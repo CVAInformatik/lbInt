@@ -38,9 +38,8 @@ int _changeSign(std::vector<baseType> &a );
 int _sign(const std::vector<baseType> &a );
 void shiftDown1(std::vector<baseType> &a)	;
 
+
 class lbIntType  {
-	
-	
 public: 
 	
 	  lbIntType (){longInt.clear();}
@@ -165,13 +164,13 @@ public:
 	  }
 
 		//
-	  // integer multiplication  by Radix, 
+	  // integer multiplication  by a power of the radix, 
 	  // 
-	  void  mulRadix(){
+	  void  mulRadix(unsigned int p = 1){
 	  	if( longInt.size()> 0 ) { // 0 * Radix is still 0 
-	  		longInt.push_back( 0 )	;
-	  		for (size_t i = longInt.size()-1 ; i > 0; i-- ) longInt[i] = longInt[i-1];
-	  		longInt[0] = 0;
+	  		for( int i = 0 ; i < p ;i++) 	longInt.push_back( 0 )	;
+	  		for (size_t i = longInt.size()-1 ; i > 0; i-- ) longInt[i] = longInt[i-p];
+	  		for( int i = 0 ; i < p ;i++)  	longInt[i] = 0;
 	  	}
 	  }
 	  

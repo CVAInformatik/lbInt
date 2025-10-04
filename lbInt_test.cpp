@@ -32,6 +32,22 @@ void testGCD()
   std::cout << " (p*pm)+ (q*qm) " << iToA(p) << std::endl;
 }
 
+void testMulRadix()
+{
+	  lbIntType m( 1);
+	  
+	  m.mulRadix(0);
+	  std::cout << std::endl << "= m * radix^0   " << iToA(m) << std::endl;
+	  m.mulRadix();
+	  std::cout << "= m * radix^1   " << iToA(m) << std::endl;
+	  m.mulRadix(2);
+	  std::cout << "= m * radix^2   " << iToA(m) << std::endl;
+	  m.mulRadix();
+	  std::cout << "= m * radix^1   " << iToA(m) << std::endl;
+	  std::cout << std::endl;
+	 
+}
+
 int main(int argc, char **argv)
 {
 	
@@ -95,6 +111,8 @@ int main(int argc, char **argv)
   z = 1;
 	z <<= 86243 ;
   std::cout << "z 2^86243 " " BitSize "<< BitSize(z) << " DigitSize " << z.DigitSize()  << std::endl;
+  
+  testMulRadix();
   
 	return 0;
 }
