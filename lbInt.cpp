@@ -1,7 +1,19 @@
 
+/*
+Copyright  © 2025 Claus Vind-Andreasen
+
+This program is free software; you can redistribute it and /or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111 - 1307 USA
+This General Public License does not permit incorporating your program into proprietary programs.If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library.
+If this is what you want to do, use the GNU Library General Public License instead of this License.
+*/
+
+
 #include <algorithm>
 #include <iostream>
 #include "lbInt.h"
+#include "lbIntRandom.h"
 
 
 lbIntType::lbIntType (const int64_t l) {
@@ -334,8 +346,143 @@ void DivRem(const lbIntType &a, const lbIntType &m,lbIntType &Quotient, lbIntTyp
 	/* clean up */					
 	if(Remainder.sign() < 0 ){
 		 Remainder += _divisor;
-		 Quotient  += -1;
+		 Quotient  -= 1;
 	}		
 }
 
 
+int Jacobi(const lbIntType& a, const lbIntType& b)
+{
+	lbIntType A(a);
+	lbIntType M(b);
+	int ResSign = 1;
+	if (M.sign() == 0 )return 1; // b is zero
+	else {
+	  A %= M ;
+		if (A.sign() == 0 ) {  //A|M 
+			return 0;
+		}
+		else {
+			while (A.sign() != 0 ) {
+				while ((A.sign() != 0 ) && ((A.Digit() & 1) == 0))
+				{
+					A >>= 1;
+					switch (M.Digit() & 0x7)
+					{
+					case 3: 
+          case 5:   
+               ResSign = -ResSign;
+						break;
+					default:
+						break;
+					}
+				}
+				lbIntType temp(A);
+				A = M;
+				M = temp;
+				if ((A.sign() != 0 ) && (M.sign() != 0 ) && (3 == A.Digit() & 0x3) && (3 == (M.Digit() & 0x3))) 
+                    ResSign = -ResSign;
+        A %= M ;
+			}
+			if ((M == 1)==0)
+				return ResSign;
+			else
+				return 0;
+		}
+	}
+}
+
+
+bool MillerRabin(const lbIntType& number, int witnesses)
+{
+    lbIntType m( number) ;
+
+    if ( (!m.sign()) && ((m.Digit() & 1) == 0 )) {
+        std::cout << "argument must be odd " << std::endl;
+        return false;
+    }
+    else {
+
+        lbIntRandom Rands(MODULUS);
+
+        lbIntType r = number;
+        r -= 3;
+
+        Rands.SetSeed(r);
+
+        lbIntType d = m;  
+        
+        d -= 1;
+        
+        int s = 0;
+        while (!d.sign()  && ((d.Digit() & 1) == 0)) {
+            d >>= 1;
+            s++;
+        }
+
+        for (size_t ix = 0; ix < witnesses; ix++)
+        {
+            lbIntType a = Rands.Rand();
+            a += 2;
+
+            //std::cout << "a: " << a.ToString() << std::endl;
+            lbIntType x = modpow(a, d, m);
+
+            for (int i = 0; i < s; i++) {
+               lbIntType y = modmult(x, x, m);
+               lbIntType t = m;
+               t -= x;
+               
+               if (((y == 1) == 0) && ((x == 1 )!= 0) && ((t==1 ) != 0 )) {
+                   std::cout << "mr fail at " << ix << " ";
+                    return false;  
+                }
+                x = y;
+            }
+            if ((x == 1) != 0) {
+                std::cout << "mr fail at " << ix << " ";
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+// Compute a*b % mod
+lbIntType modmult(const lbIntType &_a, const lbIntType &_b, const lbIntType &mod)
+{  
+    lbIntType result;
+    lbIntType a = _a;
+    lbIntType b = _b;
+    while (b.sign()!= 0 ) {
+
+        if ((b.Digit() & 1) == 1) {
+            result += a;
+            result %= mod;
+        }
+        a +=  a;
+        a %= mod ;
+        b >>= 1;
+    }
+    return result;
+}
+
+ // Compute a^b % mod
+lbIntType modpow(const lbIntType& _a, const lbIntType& _b, const lbIntType& mod)
+{ 
+    lbIntType result;
+    lbIntType  a = _a;
+    lbIntType  b = _b;
+    
+    result += 1 ;
+
+    while (b.sign()!= 0) {
+        if ((b.Digit() & 1) == 1) {
+            result = modmult(result, a, mod);
+        }
+        a = modmult(a, a, mod);
+        b >>= 1;
+    }
+
+    return result;
+}

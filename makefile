@@ -11,7 +11,9 @@ clean:
 
 lbInt.o : lbInt.cpp lbInt.h
 
-lbInt_test.o : lbInt_test.cpp  lbInt.cpp lbInt.h 
+lbIntRandom.o :  lbIntRandom.cpp   lbIntRandom.h
 
-lbInt :  lbInt_test.o lbInt.o 
+lbInt_test.o : lbInt_test.cpp  lbInt.cpp lbInt.h  lbIntRandom.cpp   lbIntRandom.h
+
+lbInt :  lbInt_test.o lbInt.o lbIntRandom.o
 

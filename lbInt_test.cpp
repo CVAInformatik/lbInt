@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "lbInt.h"
+#include "lbIntRandom.h"
 
 void testGCD()
 {
@@ -90,6 +91,76 @@ void testDivRem()
 }
 
 
+
+ void testJacobi()
+ {
+    for (int j = 3; j < 60; j += 2)
+        for (int i = 1; i < 31; i++) {
+            std::cout << "Jacobi ( ";
+            lbIntType cj((long long) j);
+            lbIntType ci((long long) i);
+            std::cout << iToA(ci) << "/ ";
+            std::cout << iToA(cj) << " ) = ";            
+            std::cout << Jacobi( ci, cj) << std::endl;
+        }
+}
+
+
+
+void testMR1(int &npcount, int &pcount, int width,  lbIntType& p)
+{
+    lbIntType prime = p;
+
+    std::string s = iToA(p);
+    std::string prefix = "";
+
+    while (prefix.length() + s.length() < width) prefix = prefix + " ";
+
+    if (MillerRabin(prime, 30)) {
+        std::cout << "n " << prefix << s << " is probably prime  " <<   ++pcount << std::endl;
+    }
+    else {
+        std::cout << "n " << prefix << s << " is not prime  " <<  ++npcount + pcount <<  std::endl;
+    };
+}
+
+
+
+void testMR()
+{
+    lbIntType prime("26959946667150639794667015087019630673557916260026308143510066298881");
+    lbIntType prime1("5127821565631733");
+    lbIntType prime2("2147483647");
+    
+#define WIDTH 75
+    int np = 0, p = 0;
+    testMR1(np, p, WIDTH, prime2);
+    testMR1(np, p, WIDTH, prime1);
+    testMR1(np, p, WIDTH, prime2);
+
+    lbIntRandom Rands(MODULUS);
+
+    lbIntType r = prime;
+    r -= 3;
+    Rands.SetSeed(r);
+
+#define COUNT 1000
+
+    np = 0;
+    p = 0;
+    for (int i = 0; i < COUNT; i++) {
+
+        lbIntType pc = Rands.Rand();
+        if ((pc.Digit() & 1) == 0) pc += 1;
+        testMR1(np, p, WIDTH, pc);
+
+    }
+}
+
+
+
+
+
 int main(int argc, char **argv)
 {
 	
@@ -158,9 +229,10 @@ int main(int argc, char **argv)
 	z <<= 86243 ;
   std::cout << "z 2^86243 " " BitSize "<< BitSize(z) << " DigitSize " << z.DigitSize()  << std::endl;
   
-  testMulRadix();
-  
-  testDivRem();
-   
+  testMulRadix();  
+  testDivRem(); 
+  testJacobi();
+  testMR();
+    
 	return 0;
 }
