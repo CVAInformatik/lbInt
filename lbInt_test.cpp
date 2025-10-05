@@ -37,16 +37,58 @@ void testMulRadix()
 	  lbIntType m( 1);
 	  
 	  m.mulRadix(0);
-	  std::cout << std::endl << "= m * radix^0   " << iToA(m) << std::endl;
+	  std::cout << std::endl << "m = m * radix^0   " << iToA(m) << std::endl;
 	  m.mulRadix();
-	  std::cout << "= m * radix^1   " << iToA(m) << std::endl;
+	  std::cout << "m = m * radix^1   " << iToA(m) << std::endl;
 	  m.mulRadix(2);
-	  std::cout << "= m * radix^2   " << iToA(m) << std::endl;
+	  std::cout << "m = m * radix^2   " << iToA(m) << std::endl;
 	  m.mulRadix();
-	  std::cout << "= m * radix^1   " << iToA(m) << std::endl;
+	  std::cout << "m = m * radix^1   " << iToA(m) << std::endl;
 	  std::cout << std::endl;
 	 
 }
+
+
+void testDivRem()
+{
+			
+		lbIntType b("86189793618632");
+		lbIntType c("193719739186189793618632");
+		
+		lbIntType quot, rem;
+		
+		DivRem(c,b, quot, rem);
+		printf(" c =     %s \n", iToA(c).c_str());
+		printf(" b =     %s \n", iToA(b).c_str());
+		printf(" qout =  %s \n", iToA(quot).c_str());
+		printf(" rem  =  %s \n", iToA(rem).c_str());
+
+    lbIntType check;
+    check = b; 
+    printf(" check=  %s \n", iToA(check).c_str());
+		printf(" check*= quot  %s \n", iToA(quot).c_str());
+		check *= quot ; 
+		printf(" check=  %s \n", iToA(check).c_str());
+		printf(" check+=rem  %s \n", iToA(rem).c_str());
+		check += rem;
+		printf(" check=  %s \n", iToA(check).c_str());
+    printf(" c =     %s \n", iToA(c).c_str());
+
+    printf("******************************\n");
+    if( 0 == ( check == c) ) printf("test passed\n");
+    else printf("test failed\n");
+    printf("******************************\n");
+    
+    lbIntType d(c);
+    d /= b ;
+    printf(" c /= b;     %s \n", iToA(d).c_str());
+
+    lbIntType e(c);
+    e %= b ;
+    printf(" c %%= b;     %s \n", iToA(e).c_str());
+ 
+}
+
 
 int main(int argc, char **argv)
 {
@@ -81,20 +123,24 @@ int main(int argc, char **argv)
   		z >>= i ;
   		std::cout << "6.2 z "<< i <<"  "<< iToA( z) << std::endl;
 	}
-/*
+
   z = 1;
 	z <<= 86243 ;
   std::cout << "7 z "<< 86243 <<"  "<< iToA( z) << std::endl;
 	z -= 1 ;
   std::cout << "8 z "<< "  "<< iToA( z) << std::endl;
-*/
-  z = 1;
-	z <<= 862 ;
+
 	baseType x1;
+	z = 1;
+	z <<= 862 ;
+  std::cout << "9.0 z    "<< "  "<< iToA( z) << std::endl;
+  x1 = z.divRadix(0);
+  std::cout << "9.1 divRadix(0)  "<< "  "<< x1 << std::endl;
+
   do {
     std::cout << "9.0 z    "<< "  "<< iToA( z) << std::endl;
   	 x1 = z.divRadix();
-    std::cout << "9.1 LSD  "<< "  "<< x1 << std::endl;
+    std::cout << "9.1 divRadix  "<< "  "<< x1 << std::endl;
   } while ( x1 >= 0 ) ;
   
   
@@ -114,5 +160,7 @@ int main(int argc, char **argv)
   
   testMulRadix();
   
+  testDivRem();
+   
 	return 0;
 }

@@ -285,3 +285,57 @@ void extendedGCD(const lbIntType &_p, const lbIntType &_q, lbIntType &gcd, lbInt
 	  qm = sq;
 }
 
+void DivRem(const lbIntType &a, const lbIntType &m,lbIntType &Quotient, lbIntType &Remainder )
+{
+	if (m.sign() == 0) {
+		Quotient  = 0;
+		Remainder = 0;
+		return;
+	}
+
+	if( (a.DigitSize() == 1 ) && (m.DigitSize() == 1 )) // two small numbers
+	{
+			Quotient =  a.Digit() / m.Digit();
+			Remainder=  a.Digit() % m.Digit() ;
+			return;
+	}
+	// at least on big number
+	lbIntType _dividend(a);
+	lbIntType _divisor(m);
+
+
+	int reciprocal = UL/(2 + m.Digit( m.DigitSize() -1 ));
+	int shift = (int) m.DigitSize();
+	lbIntType _reciprocal(reciprocal);
+	
+	Remainder = _reciprocal;
+	Remainder *= _dividend;
+	
+
+	if (Remainder.sign() != 0)  Remainder.divRadix(shift);
+						
+	while(1){
+			Quotient = Remainder;
+		  Remainder *= _divisor;
+		  Remainder.changeSign();
+		  Remainder += _dividend;
+      if(Remainder.sign() < 0){
+      	 lbIntType r(Remainder);
+      	 r.changeSign();
+      	 if ( 0 == (_divisor == r) ) break;
+      } else 
+		      if ((_divisor == Remainder) > 0 ) break;
+ 			Remainder *= _reciprocal;
+      if (Remainder.sign() != 0)  Remainder.divRadix(shift);
+		  if(Remainder.sign() == 0 ) Remainder = 1;
+		  Remainder += Quotient;
+	}					
+	
+	/* clean up */					
+	if(Remainder.sign() < 0 ){
+		 Remainder += _divisor;
+		 Quotient  += -1;
+	}		
+}
+
+

@@ -9,8 +9,9 @@
 #include <random>
 
 typedef int baseType;
+class lbIntType ;
 
-// the digits are 2s complement integers in the openrange ]-MODULUS...MODULUS[
+// the digits are 2s complement integers in the open range ]-MODULUS...MODULUS[
 // this range must leave a one-bit head room, at least, but gives other advantages.
 
 #define DECIMAL
@@ -38,6 +39,7 @@ int _changeSign(std::vector<baseType> &a );
 int _sign(const std::vector<baseType> &a );
 void shiftDown1(std::vector<baseType> &a)	;
 
+void DivRem(const lbIntType &a, const lbIntType &m,lbIntType &Quotient, lbIntType &Remainder );
 
 class lbIntType  {
 public: 
@@ -108,6 +110,20 @@ public:
 	  	return *this;
 	  }
 
+	  inline lbIntType & operator/=(const lbIntType  &lb )
+	  {
+	  	lbIntType dummy ;
+	  	DivRem(*this, lb, *this, dummy );
+	  	return *this ;
+	  }
+
+	  inline lbIntType & operator%=(const lbIntType  &lb )
+	  {
+	  	lbIntType dummy ;
+	  	DivRem(*this, lb, dummy, *this);
+	  	return *this ;
+	  }
+
 	  //
 	  // 0 if 0, 1 if positive -1 if negative
 	  //
@@ -144,18 +160,17 @@ public:
 	  // returns the number of digits in the internal representation
 	  //
 	  size_t DigitSize() const { return longInt.size() ;}
-
 	  
 	  //
 	  // integer division by a power of the radix, 
 	  // returns the numerical value of the new LSD  or -1 if number is 0
-	  //
+	  // ( "removing  p LSDs" )
 	  baseType  divRadix(unsigned int power = 1 ){
 	  	unsigned int p = power ;
 	  	baseType res = 0;
 	  	if(longInt.size() > p ) {
 	  		for( int i = p ; i < longInt.size() ; i++) longInt[i-p] = longInt[i];
-	  	  for( int i = 0 ;  i < p ; i++ ) if (longInt.size() ) longInt.pop_back();	  	
+	  	  for( int i = 0 ;  i < p ; i++ ) longInt.pop_back();	  	
   	  }   	
   	  else longInt.clear();
   	  	
@@ -169,7 +184,7 @@ public:
 
 		//
 	  // integer multiplication  by a power of the radix, 
-	  // 
+	  // ( "appending 0s as LSDs" )
 	  void  mulRadix(unsigned int p = 1){
 	  	if( longInt.size()> 0 ) { // 0 * Radix is still 0 
 	  		for( int i = 0 ; i < p ;i++) 	longInt.push_back( 0 )	;
@@ -241,8 +256,13 @@ public:
 	  void mul10(); //helper for aToI 
 };
 
+/*  Essential utilities  */
+std::string iToA(const lbIntType &i);
+	
+	
 /*  various nice to have utilities  */
 
 size_t BitSize(const lbIntType &il); 	  	
-std::string iToA(const lbIntType &i);
 void extendedGCD(const lbIntType &a, const lbIntType &b, lbIntType &gcd, lbIntType &am, lbIntType &bm  );	
+void DivRem(const lbIntType &a, const lbIntType &m,lbIntType &Quotient, lbIntType &Remainder );
+
