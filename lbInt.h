@@ -275,15 +275,6 @@ public:
 
 /*  Essential utilities  */
 std::string iToA(const lbIntType &i);
+
 	
 	
-/*  various nice to have utilities  */
-
-size_t BitSize(const lbIntType &il); 	  	
-void extendedGCD(const lbIntType &a, const lbIntType &b, lbIntType &gcd, lbIntType &am, lbIntType &bm  );	
-void DivRem(const lbIntType &a, const lbIntType &m,lbIntType &Quotient, lbIntType &Remainder );
-int Jacobi(const lbIntType& a, const lbIntType& b);
-lbIntType modmult(const lbIntType& _a, const lbIntType& _b,  const lbIntType& mod);
-lbIntType modpow( const lbIntType& _a, const lbIntType& _b,  const lbIntType& mod);
-bool MillerRabin(const lbIntType& number, int witnesses);
-

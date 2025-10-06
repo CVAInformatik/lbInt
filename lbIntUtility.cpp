@@ -17,6 +17,32 @@ If this is what you want to do, use the GNU Library General Public License inste
 
 
 //
+// returns the bit size of the internal representation
+// 
+size_t BitSize(const lbIntType &il) { 	  	
+	if ( il.sign() == 0) return 0 ;		    	    	
+	/* we ignore we only are using 30 bit and calculate as 32 bit */
+	int leadingZeroes = sizeof(int) -1 ; // we know there is a least one '1'
+	int temp =  il.Digit(il.DigitSize()-1) ;
+	if (temp < 0) temp = -temp; // we use the numerical value 
+    	
+	const int m16 = 0xFFFF0000; // 16 bit mask
+	const int m8  = 0xFF000000;
+	const int m4  = 0xF0000000;
+	const int m2  = 0xC0000000;
+	const int m1  = 0x80000000; // 1 bit mask
+      
+	if ( temp & m16) leadingZeroes -= 16; else temp <<= 16;
+	if ( temp & m8)  leadingZeroes -= 8 ; else temp <<= 8;
+	if ( temp & m4)  leadingZeroes -= 4 ; else temp <<= 4;
+	if ( temp & m2)  leadingZeroes -= 2 ; else temp <<= 2;
+	if ( temp & m1)  leadingZeroes -= 1 ; 
+
+	return (DIGITSIZE * il.DigitSize()) - leadingZeroes ;
+}
+
+
+//
 //     GDC(p,q) = pm *p + qm * q
 //
 void extendedGCD(const lbIntType &_p, const lbIntType &_q, lbIntType &gcd, lbIntType &pm, lbIntType &qm  )

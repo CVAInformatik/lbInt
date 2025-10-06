@@ -9,6 +9,12 @@ This General Public License does not permit incorporating your program into prop
 If this is what you want to do, use the GNU Library General Public License instead of this License.
 */
 
+
+//
+// returns the bit size of the internal representation
+// 
+size_t BitSize(const lbIntType &il);
+
 //
 //     GDC(p,q) = pm *_p + qm * _q
 //
