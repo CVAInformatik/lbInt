@@ -4,6 +4,8 @@
 
 #include "lbInt.h"
 #include "lbIntRandom.h"
+#include "lbIntUtility.h"
+
 
 void testGCD()
 {
