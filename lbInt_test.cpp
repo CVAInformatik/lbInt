@@ -158,10 +158,28 @@ void testMR()
 }
 
 
+void testNotEqual()
+{
+    lbIntType prime("26959946667150639794667015087019630673557916260026308143510066298881");
+    lbIntType prime1("5127821565631733");
+  
+    int a = (prime == prime); 
+    int b = (prime != prime); 
+    int c = (prime == prime1); 
+    int d = (prime != prime1); 
+    int e = (prime1 == prime); 
+    int f = (prime1 != prime); 
 
+    std::cout << "prime == prime   "  << a  << std::endl;
+    std::cout << "prime != prime   "  << b	<< std::endl;
+    std::cout << "prime == prime1   " << c  << std::endl;
+    std::cout << "prime != prime1   " << d  << std::endl;
+		std::cout << "prime1 == prime   " << e  << std::endl;
+    std::cout << "prime1 != prime   " << f  << std::endl;
+	
+}
 
-
-int main(int argc, char **argv)
+void testMisc()
 {
 	
 	lbIntType x("642846921491246912416946");
@@ -223,16 +241,21 @@ int main(int argc, char **argv)
   
   std::cout << "a1 " << iToA(a1) << std::endl<< std::endl;
   
-  testGCD();
 
   z = 1;
 	z <<= 86243 ;
   std::cout << "z 2^86243 " " BitSize "<< BitSize(z) << " DigitSize " << z.DigitSize()  << std::endl;
-  
+}
+
+int main(int argc, char **argv)
+{
+  testMisc();
+  testGCD();
   testMulRadix();  
   testDivRem(); 
   testJacobi();
   testMR();
+  testNotEqual();
     
 	return 0;
 }

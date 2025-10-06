@@ -80,6 +80,12 @@ public:
 	  	  a -= lb ;
 	  	  return a.sign();
 		}
+		
+		// 1 if not equal,  0 if equal 
+		int operator!=(const lbIntType& lb)
+	  {  
+	  	  return ((*this == lb) != 0 );
+		}
 	  
 	  inline lbIntType & operator+=(const lbIntType  &lb )
 	  { 
@@ -147,14 +153,14 @@ public:
 	  
 	  /*
 	      Low level access to the internal  representation, which is useful for
-	      various  near bit-level  arithmetics and debugging
+	      various  near bit-level  arithmetics, IO  and debugging
 	  */	  
 	  
 	  //
 	  // returns the numerical value of a Digit in the representation 
 	  // or -1 if the number is 0 (and has no Digit ).
 	  // Default is the LSD, but you can get the value of other digits 
-	  // with an offset > 0
+	  // with an offset > 0,  -1 if non-existing digit 
 	  //
 	  baseType Digit(unsigned int offset = 0)  const
 	  {
@@ -162,7 +168,7 @@ public:
 	  		switch (_sign(longInt)){
 	  			case -1: return -longInt[offset];  	break;
 	  			case 0 : return -1 ;    	  				break;
-	  			default : return longInt[offset];		break;
+	  			default: return longInt[offset];		break;
 	  		}
   		return -1 ; 
 	  }
@@ -195,11 +201,11 @@ public:
 
 		//
 	  // integer multiplication  by a power of the radix, 
-	  // ( "appending 0s as LSDs" )
+	  // ( "appending p  zeroes as LSDs" )
 	  void  mulRadix(unsigned int p = 1){
 	  	if( longInt.size()> 0 ) { // 0 * Radix is still 0 
 	  		for( int i = 0 ; i < p ;i++) 	longInt.push_back( 0 )	;
-	  		for (size_t i = longInt.size()-1 ; i > 0; i-- ) longInt[i] = longInt[i-p];
+	  		for (size_t i = longInt.size() ; i > p; i-- ) longInt[i-1] = longInt[i-1-p];
 	  		for( int i = 0 ; i < p ;i++)  	longInt[i] = 0;
 	  	}
 	  }

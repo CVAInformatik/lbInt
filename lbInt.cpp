@@ -190,11 +190,10 @@ void lbIntType::aToI(const std::string& x){
 
 }
 
-
 std::string iToA(const lbIntType &il)
 {
-#define FORMATSTRING "%09d"
-#define DIGITS 9
+#define FORMATSTRING1 "%d"
+#define FORMATSTRING2 "%09d"
 
 	if (il.DigitSize() == 0) {
 		std::string* s = new std::string();
@@ -203,31 +202,23 @@ std::string iToA(const lbIntType &il)
 	}
 	else {
 		char buffer[12];
-		std::string s;// = new std::string();
+		std::string s;
 		int sign = il.sign();
 
-		for (int i = 0; i < il.DigitSize(); i++) {
-			sprintf(buffer, FORMATSTRING, il.Digit(i));
-			char* c1 = buffer;
-			char* c2 = buffer + DIGITS - 1 ;
-			while (c1 < c2)
-			{
-				char t = *c1;
-				*c1 = *c2;
-				*c2 = t;
-				c1++; c2--;
-			}
+		if( sign < 0) s.append("-")	;
+		sprintf(buffer, FORMATSTRING1, il.Digit(il.DigitSize()-1));
+		s.append(buffer);
+		for (int i = il.DigitSize()-2 ; i >= 0; i--) {
+			sprintf(buffer, FORMATSTRING2, il.Digit(i));
 			s.append(buffer);
 		}
-		while (s.size() && (s.back() == '0')) s.pop_back();
-		if (s.size() == 0) 
-			s.append("0");
-		else 
-		    if (sign < 0)  s.append("-");
-		std::reverse(s.begin(), s.end());
 		return s;
 	}
 }
+
+
+
+
 #endif // decimal
 
 //
